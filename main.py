@@ -1,40 +1,44 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
-from flask_httpauth import HTTPBasicAuth
 import os
 import markdown
+
+#Classes
+from resources import authUser
 
 app = Flask(__name__)
 
 api = Api(app)
 
-auth = HTTPBasicAuth()
+apikey = "6z5s10RbwlTwExZ1"
 
-USER_DATA = {
-    "admin": "SecretPassword"
-}
-
-@auth.verify_password
-def verify(username, password):
-    if not (username and password):
-        return False
-    return USER_DATA.get(username) == password
+parser = reqparse.RequestParser()
+parser.add_argument('apiKey', location='headers')
 
 class Device(Resource):
-	@auth.login_required
+	
 	def get(self):
-		# If the key does not exist in the data store, return a 404 error.
+		if checkAuth() == True:
+			return {'message': 'Device found', 'data': "Hej med dig"}, 200
+		else:
+			return {'message': 'Unauthorized'}, 400
 
-		return {'message': 'Device found', 'data': "Hej med dig"}, 200
+def checkAuth():
+	args = parser.parse_args()
 
-@app.route("/")
+	if args['apiKey'] == "6z5s10RbwlTwExZ1":
+		return True
+	else:
+		return False
+
+"""@app.route("/")
 def index():
 	#Default site
 
 	with open("./docs.md", "r") as markdown_file:
 		content = markdown_file.read()
 
-		return content
+		return content"""
 
 
 api.add_resource(Device, '/devices')
