@@ -5,32 +5,16 @@ import markdown
 
 #Database
 from resources.database import Database
-myDatabase = Database()
+myDatabase = Database("localhost", "root", "", "api")
 
 #Auth
 from resources.auth import AuthUser
 auth = AuthUser()
 
-class Device(Resource):
+class Devices(Resource):
 	def get(self):
 		if auth.checkAuth() == False:
 			return {'message': 'Unauthorized'}, 400
 		else:
-			parser = reqparse.RequestParser()
-			parser.add_argument('id')
-			args = parser.parse_args()
-
-			myDatabase.printdb()
+			return {'message': 'Success', 'data': myDatabase.getDevices()}, 200
 			
-
-	def post(self):
-		if auth1.checkAuth() == False:
-			return {'message': 'Unauthorized'}, 400
-		else:
-			print("Hey")
-
-	def delete(self):
-		if auth1.checkAuth() == False:
-			return {'message': 'Unauthorized'}, 400
-		else:
-			print("Hey")

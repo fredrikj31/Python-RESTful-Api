@@ -1,14 +1,5 @@
-import mysql.connector
+from resources.database import Database
 
-mydb = mysql.connector.connect(
-	host="localhost",
-	user="root",
-	passwd=""
-)
+myDB = Database("localhost", "root", "", "api")
 
-mycursor = mydb.cursor()
-
-mycursor.execute("SHOW DATABASES")
-
-for x in mycursor:
-	print(x)
+print(myDB.getDevices())
