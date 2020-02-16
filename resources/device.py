@@ -19,18 +19,28 @@ class Device(Resource):
 			parser = reqparse.RequestParser()
 			parser.add_argument('id', required=True)
 			args = parser.parse_args()
+			print(args['id'])
 
 			return {'message': 'Success', 'data': myDatabase.getDevice(args['id'])}, 200
 			
 
 	def post(self):
-		if auth1.checkAuth() == False:
+		if auth.checkAuth() == False:
 			return {'message': 'Unauthorized'}, 400
 		else:
-			print("Hey")
+			parser = reqparse.RequestParser()
+			parser.add_argument('deviceName', required=True)
+			parser.add_argument('deviceType', required=True)
+			args = parser.parse_args()
+
+			result = myDatabase.createDevice(args['deviceName'], args['deviceType'])
+			if result == True:
+				return {'message': 'Success', 'data': 'Device Created'}, 200
+			else:
+				return {'message': 'System Error'}, 500
 
 	def delete(self):
-		if auth1.checkAuth() == False:
+		if auth.checkAuth() == False:
 			return {'message': 'Unauthorized'}, 400
 		else:
 			print("Hey")
